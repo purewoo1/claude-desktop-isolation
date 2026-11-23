@@ -1,0 +1,27 @@
+#!/usr/bin/python3
+"""Open Claude sign-in and callbacks inside the private session."""
+import subprocess
+import sys
+from urllib.parse import urlsplit
+
+sys.path.insert(0, "/opt/claude-guard")
+from session import browser_command, desktop_command
+
+
+def main():
+    if len(sys.argv) != 2:
+        raise SystemExit("Expected one URL.")
+    url = sys.argv[1]
+    parsed = urlsplit(url)
+    if parsed.scheme in ("http", "https") and parsed.hostname:
+        command = browser_command("auth-browser")
+    elif parsed.scheme == "claude":
+        command = desktop_command()
+    else:
+        raise SystemExit("Only HTTP(S) and Claude callbacks are accepted.")
+    subprocess.Popen([*command, url], stdin=subprocess.DEVNULL,
+                     stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+
+if __name__ == "__main__":
+    main()

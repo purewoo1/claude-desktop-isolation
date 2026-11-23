@@ -1,0 +1,2 @@
+[Default Applications]
+x-scheme-handler/claude=com.anthropic.Claude.desktop;

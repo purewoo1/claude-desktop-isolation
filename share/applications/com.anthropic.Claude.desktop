@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Claude (isolated)
+Exec=/opt/claude-guard/bin/xdg-open %u
+MimeType=x-scheme-handler/claude;
+NoDisplay=true

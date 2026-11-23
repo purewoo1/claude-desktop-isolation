@@ -1,0 +1,15 @@
+.env
+.env.*
+*.local
+*.local.*
+*.log
+*.pem
+*.key
+*.deb
+*.AppImage
+__pycache__/
+.pytest_cache/
+.venv/
+profile/
+state/
+backups/

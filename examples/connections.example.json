@@ -1,0 +1,26 @@
+{
+  "git": {
+    "repository": "example-owner/example-repository.git",
+    "review_prefix": "review/claude/",
+    "key": "~/.ssh/example-github-key",
+    "known_hosts": "~/.ssh/known_hosts",
+    "via_proxy": true
+  },
+  "clusters": {
+    "worker": {
+      "host": "worker.example.invalid",
+      "user": "example-user",
+      "key": "~/.ssh/example-cluster-key",
+      "known_hosts": "~/.ssh/known_hosts",
+      "roots": ["/home/example-user/project"],
+      "mounts": ["/home/example-user", "/srv/projects"],
+      "repositories": {
+        "demo": {
+          "path": "/srv/projects/demo",
+          "source_dirs": ["src", "csrc"],
+          "tips": ["0123456789abcdef0123456789abcdef01234567"]
+        }
+      }
+    }
+  }
+}

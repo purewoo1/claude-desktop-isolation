@@ -1,0 +1,7 @@
+{
+  "name": "private-usage-panel",
+  "version": "0.2.1",
+  "license": "MIT",
+  "description": "Read-only usage band preserving the Context rail, with optional detail pane; no extra network or compaction.",
+  "author": { "name": "ming" }
+}

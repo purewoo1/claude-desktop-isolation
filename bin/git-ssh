@@ -1,0 +1,43 @@
+#!/usr/bin/python3
+"""Translate Git's SSH invocation into a request for a scoped operation."""
+import os
+import select
+import shlex
+import socket
+import sys
+
+
+def main():
+    if len(sys.argv) != 3 or sys.argv[1] != "git@github.com":
+        raise ValueError
+    operation, repository = shlex.split(sys.argv[2])
+    if "/" not in repository or repository != os.environ["CLAUDE_GUARD_REPOSITORY"]:
+        raise ValueError
+    allowed = {"git-upload-pack": b"upload\n", "git-receive-pack": b"receive\n"}
+    with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as connection:
+        connection.connect("/run/guard/git.sock")
+        connection.sendall(allowed[operation])
+        inputs = [0, connection]
+        while True:
+            ready, _, _ = select.select(inputs, [], [])
+            for source in ready:
+                if source == 0:
+                    data = os.read(0, 65536)
+                    if not data:
+                        connection.shutdown(socket.SHUT_WR)
+                        inputs.remove(0)
+                    else:
+                        connection.sendall(data)
+                else:
+                    data = connection.recv(65536)
+                    if not data:
+                        return
+                    view = memoryview(data)
+                    while view:
+                        view = view[os.write(1, view):]
+
+
+try:
+    main()
+except (KeyError, OSError, ValueError):
+    sys.exit("Git gateway refused the request or its connection closed.")
